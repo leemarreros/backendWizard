@@ -7,7 +7,7 @@ var HouseholdSchema = new Schema({
   address: String,
   zipcode: String,
   city: String,
-  State: String,
+  state: String,
   bedrooms: Number,
   people: [{type: mongoose.Schema.Types.ObjectId, ref: 'Person'}],
   cars: [{type: mongoose.Schema.Types.ObjectId, ref: 'Car'}]
