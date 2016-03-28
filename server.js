@@ -17,5 +17,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 require('./app/routes.js')(router);
 
+app.use('/api', router);
+
 app.listen(port);
 console.log('Maggic happen on port ' + port);

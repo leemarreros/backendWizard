@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var HouseholdSchema = new Schema({
-  fbId: String,
+  fbId: {type: String, unique: true},
   createdOn: {type: Date, default: Date.now},
   address: String,
   zipcode: String,
