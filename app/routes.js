@@ -5,7 +5,6 @@ var Person = require('./models/Person');
 module.exports = function(router) {
     router.route('/authfb')
         .post(function(req, res){
-            console.log('posting')
             Household.findOne( {fbId: req.body.fbId},
                 function(err, data) {
                     if (err) {
@@ -71,5 +70,38 @@ module.exports = function(router) {
                     
             })
             
-        })        
+        });
+    
+    router.route('/peopledata/:household_id')
+        .get(function(req, res) {
+            Household.findOne( {fbId: req.params.household_id}, {people: 1},
+                function(err, data) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    res.json({status: 'dataRetrieved', peopleData: data});
+                }).populate('people');
+        })
+    
+    router.route('/deleteperson')
+        .post(function(req, res) {
+            Person.remove({_id: req.body._id}, function(err, person) {
+                if (err) res.send(err);
+                Household.update({fbId: req.body.fbId}, {$pull: {people: req.body._id}}, function(err, data) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    Household.findOne( {fbId: req.body.fbId}, {people: 1}, function(err, data) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        res.json({status: 'personDeleted', peopleData: data});
+                    }).populate('people');
+                })
+            })
+        })
+       
 }
