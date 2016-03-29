@@ -13,7 +13,7 @@ module.exports = function(router) {
                         return;
                     }
                     if (data) {
-                        console.log(data);
+                        console.log('HouseholdData', data);
                         res.json({status: 'dataRetrieved', houseData: data});
                     } else {
                         var household = new Household();
@@ -24,7 +24,7 @@ module.exports = function(router) {
                             return;
                         })
                     }
-                })
+                }).populate('people').populate('cars');
         })
     router.route('/housedataupdate')
         .post(function(req, res) {
@@ -50,6 +50,7 @@ module.exports = function(router) {
             var personData = {};
             !!req.body.firstname ? personData.firstname = req.body.firstname : null;
             !!req.body.lastname ? personData.lastname = req.body.lastname : null;
+            !!req.body.email ? personData.email = req.body.email : null;
             !!req.body.age ? personData.age = req.body.age : null;
             !!req.body.gender ? personData.gender = req.body.gender : null;
             
