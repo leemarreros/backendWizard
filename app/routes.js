@@ -6,13 +6,14 @@ module.exports = function(router) {
     router.route('/authfb')
         .post(function(req, res){
             console.log('posting')
-            Household.findOne( {fbId: req.body.fbId}, {_id: 1},
+            Household.findOne( {fbId: req.body.fbId},
                 function(err, data) {
                     if (err) {
                         console.log(err);
                         return;
                     }
                     if (data) {
+                        console.log(data);
                         res.json({status: 'dataRetrieved', houseData: data});
                     } else {
                         var household = new Household();
@@ -32,14 +33,42 @@ module.exports = function(router) {
             !!req.body.zipcode? newHouseData.zipcode = req.body.zipcode : null;
             !!req.body.city? newHouseData.city = req.body.city : null;
             !!req.body.state? newHouseData.state = req.body.state : null;
+            newHouseData.bedrooms = req.body.bedrooms;
             
+            console.log(newHouseData);
             Household.update( {fbId: req.body.fbId}, {$set: newHouseData}, function(err, data){
                 if (err) {
                         console.log(err);
                         return;
                  }
-                res.json({message: 'Update succesfully', status: 'houseUpdated'});
+                res.json({status: 'houseUpdated'});
             })
         })
-        
+
+    router.route('/createperson')
+        .post(function(req, res) {
+            var personData = {};
+            !!req.body.firstname ? personData.firstname = req.body.firstname : null;
+            !!req.body.lastname ? personData.lastname = req.body.lastname : null;
+            !!req.body.age ? personData.age = req.body.age : null;
+            !!req.body.gender ? personData.gender = req.body.gender : null;
+            
+            console.log('personData', personData);
+            Person.create(personData, function(err, person) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('personCreated', person._id);
+                Household.update( {fbId: req.body.fbId}, {$addToSet: {people: person._id}}, function(err, data) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    res.json({status: 'personCreated'});
+                })
+                    
+            })
+            
+        })        
 }
