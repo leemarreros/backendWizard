@@ -8,6 +8,7 @@ var CarSchema = new Schema({
   year: Number,
   licenseplate: String,
   owner: String,
+  ownerId:{type: mongoose.Schema.Types.ObjectId, ref: 'Person'} ,
 }) 
 
 module.exports = mongoose.model('Car', CarSchema);
