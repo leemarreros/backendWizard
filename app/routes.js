@@ -12,7 +12,6 @@ module.exports = function(router) {
                         return;
                     }
                     if (data) {
-                        console.log('HouseholdData', data);
                         res.json({status: 'dataRetrieved', houseData: data});
                     } else {
                         var household = new Household();
@@ -33,14 +32,21 @@ module.exports = function(router) {
             !!req.body.city? newHouseData.city = req.body.city : null;
             !!req.body.state? newHouseData.state = req.body.state : null;
             newHouseData.bedrooms = req.body.bedrooms;
-            
+            console.log(newHouseData)
             Household.update( {fbId: req.body.fbId}, {$set: newHouseData}, function(err, data){
                 if (err) {
                         console.log(err);
                         return;
                  }
-                res.json({status: 'houseUpdated'});
-            })
+                 Household.findOne( {fbId: req.body.fbId},
+                    function(err, data) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                    res.json({status: 'houseUpdated', houseData: data});
+                 }).populate('people').populate('cars');
+            });
         })
 
     router.route('/createperson')
