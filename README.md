@@ -1,7 +1,7 @@
-# backendWizard
-Back-end service for Wizzard built on Express using MongoDB
+# Back-end service for Wizzard built on Express using MongoDB
 
-Hot wo use:
+STARTING THE SERVER
+-------------------
 
--git clone ...
--"npm start" from the root directory
+* git clone ... (this repository)
+* "npm start" from the root directory
